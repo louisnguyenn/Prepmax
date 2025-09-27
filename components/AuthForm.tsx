@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Form } from '@/components/ui/form';
+import { Form, FormField } from '@/components/ui/form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -65,7 +65,14 @@ const AuthForm = ({ type }: { type: FormType }) => {
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="w-full space-y-6 mt-4 form"
 					>
-						{!isSignIn && <p>Name</p>}
+						{!isSignIn && (
+							<FormField
+								control={form.control}
+								name="name"
+								label="Name"
+								placeholder="Your Name"
+							/>
+						)}
 						<p>Email</p>
 						<p>Password</p>
 

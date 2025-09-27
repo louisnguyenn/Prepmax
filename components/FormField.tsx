@@ -7,15 +7,22 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import React from 'react';
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-const FormField = () => {
+interface FormFieldProps<T extends FieldValues> {
+  control: Control<T>
+  name: Path<T>
+  label: string;
+  placeholder?: string;
+  type?: 'text' | 'email' | 'password' | 'file'
+}
+
+// !fix <T> error, maybe not defined?
+const FormField = ({ control, name, label, placeholder, type="text" }: FormFieldProps<T>) => (
   return (
-    <FormField
-      control={form.control}
-      name="username"
-      render={({ field }) => (
+    <Controller name={name} control={control} render={({ field }) => (
         <FormItem>
-          <FormLabel>Username</FormLabel>
+          <FormLabel className="label">Username</FormLabel>
           <FormControl>
             <Input
               placeholder="shadcn"
@@ -25,9 +32,8 @@ const FormField = () => {
           <FormDescription>This is your public display name.</FormDescription>
           <FormMessage />
         </FormItem>
-      )}
+    )}
     />
-  );
-};
+);
 
 export default FormField;
