@@ -14,6 +14,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 						src="/logo.svg"
 						alt="logo"
 						width={38}
+            height={38}
 					/>
 					<h2 className="text-primary-100">Prepmax</h2>
 				</Link>
