@@ -1,8 +1,14 @@
+import { isAuthenticated } from '@/lib/actions/auth.action';
 import Image from 'next/image';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import React, { ReactNode } from 'react';
 
-const RootLayout = ({ children }: { children: ReactNode }) => {
+const RootLayout = async ({ children }: { children: ReactNode }) => {
+	const isUserAuthenticated = await isAuthenticated();	// call function located in auth.actions
+
+	// rerouting the users that are not authenticated to the sign in page
+	if (!isUserAuthenticated) redirect('/sign-in');
 	return (
 		<div className="root-layout">
 			<nav>
@@ -14,7 +20,7 @@ const RootLayout = ({ children }: { children: ReactNode }) => {
 						src="/logo.svg"
 						alt="logo"
 						width={38}
-            height={38}
+						height={38}
 					/>
 					<h2 className="text-primary-100">Prepmax</h2>
 				</Link>

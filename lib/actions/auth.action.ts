@@ -123,3 +123,10 @@ export async function getCurrentUser(): Promise<User | null> {
 		return null;
 	}
 }
+
+// check if the user is authenticated (in the database)
+export async function isAuthenticated() {
+	const user = await getCurrentUser();
+
+	return !!user;
+}
