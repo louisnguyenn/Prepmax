@@ -1,6 +1,5 @@
 'use server';
 import { db } from '@/firebase/admin';
-import { success } from 'zod';
 
 export async function signUp(params: SignUpParams) {
 	const { uid, name, email } = params;
