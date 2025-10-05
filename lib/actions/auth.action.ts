@@ -11,6 +11,7 @@ export async function signUp(params: SignUpParams) {
 	try {
 		const userRecord = await db.collection('users').doc(uid).get();
 
+		// check if a user exists
 		if (userRecord.exists) {
 			return {
 				success: false,
@@ -23,14 +24,21 @@ export async function signUp(params: SignUpParams) {
 			name,
 			email,
 		});
-	} catch (error: any) {
+
+		return {
+			success: true,
+			message: 'Account created successfully. Please sign in.',
+		};
+	} catch (error: unknown) {
 		console.error('Error creating a user', error);
 
-		if (error.code === 'auth/email-already-exists') {
-			return {
-				success: false,
-				message: 'This email is already in use.',
-			};
+		if (error && typeof error === 'object' && 'code' in error) {
+			if (error.code === 'auth/email-already-exists') {
+				return {
+					success: false,
+					message: 'This email is already in use.',
+				};
+			}
 		}
 
 		return {
@@ -54,9 +62,8 @@ export async function signIn(params: SignInParams) {
 			};
 		}
 
-    // call the set session cookie function if the account exists
+		// call the set session cookie function if the account exists
 		await setSessionCookie(idToken);
-    
 	} catch (error) {
 		console.log(error);
 
