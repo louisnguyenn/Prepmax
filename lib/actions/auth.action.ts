@@ -4,6 +4,7 @@ import { cookies } from 'next/headers';
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
 
+// sign in functionality
 export async function signUp(params: SignUpParams) {
 	const { uid, name, email } = params;
 
@@ -35,6 +36,33 @@ export async function signUp(params: SignUpParams) {
 		return {
 			success: false,
 			message: 'Failed to create an account',
+		};
+	}
+}
+
+// sign up functionality
+export async function signIn(params: SignInParams) {
+	const { email, idToken } = params;
+
+	try {
+		const userRecord = await auth.getUserByEmail(email);
+
+		if (!userRecord) {
+			return {
+				success: false,
+				message: 'User does not exist. Create an account instead.',
+			};
+		}
+
+    // call the set session cookie function if the account exists
+		await setSessionCookie(idToken);
+    
+	} catch (error) {
+		console.log(error);
+
+		return {
+			success: false,
+			message: 'Failed to log into an account',
 		};
 	}
 }
