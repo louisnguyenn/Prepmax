@@ -8,8 +8,16 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-	const PROMPT = readFileSync('./prompt/prompt.txt', 'utf8');
+	const PROMPT_TEMPLATE = readFileSync('./prompt/prompt.txt', 'utf8');
 	const { type, role, level, techstack, amount, userid } = await request.json();
+
+	// inject the dynamic variables into the prompt
+	const PROMPT = PROMPT_TEMPLATE.replace(/\$\{role\}/g, role)
+		.replace(/\$\{level\}/g, level)
+		.replace(/\$\{techstack\}/g, techstack)
+		.replace(/\$\{type\}/g, type)
+		.replace(/\$\{amount\}/g, amount)
+		.replace(/\$\{userid\}/g, userid || '');
 
 	try {
 		const { text } = await generateText({
