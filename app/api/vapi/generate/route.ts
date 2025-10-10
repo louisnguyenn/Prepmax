@@ -1,6 +1,9 @@
+import { db } from '@/firebase/admin';
+import { getRandomInterviewCover } from '@/lib/utils';
 import { google } from '@ai-sdk/google';
 import { generateText } from 'ai';
 import { readFileSync } from 'fs';
+import { join } from 'path';
 
 //* This function will create the routing for calling API requests to Vapi AI
 export async function GET() {
@@ -8,7 +11,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-	const PROMPT_TEMPLATE = readFileSync('./prompt/prompt.txt', 'utf8');
+	// reading the prompt
+	const PROMPT_TEMPLATE = readFileSync(
+		join(process.cwd(), 'app', 'api', 'prompt', 'prompt.txt'),
+		'utf8'
+	);
 	const { type, role, level, techstack, amount, userid } = await request.json();
 
 	// inject the dynamic variables into the prompt
@@ -20,10 +27,26 @@ export async function POST(request: Request) {
 		.replace(/\$\{userid\}/g, userid || '');
 
 	try {
-		const { text } = await generateText({
+		const { text: questions } = await generateText({
 			model: google('gemini-2.0-flash-001'),
 			prompt: PROMPT,
 		});
+
+		const interview = {
+			role,
+			type,
+			level,
+			techstack: techstack.split(','),
+			questions: JSON.parse(questions),
+			userId: userid,
+			finalized: true,
+			coverImage: getRandomInterviewCover(),
+			createdAt: new Date().toISOString(),
+		};
+
+		await db.collection('interviews').add(interview);
+
+		return Response.json({ success: true }, { status: 200 });
 	} catch (error) {
 		console.error(error);
 

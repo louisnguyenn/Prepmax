@@ -28,6 +28,7 @@ __CONSTRAINTS__
 - If ${type} emphasizes technical, focus mainly on concepts, problem-solving, and implementation reasoning
 - If ${type} emphasizes behavioral, focus on teamwork, communication, and conflict resolution in technical contexts
 - Maintain natural, professional phrasing appropriate for an interview setting
+- The questions are going to be read by a voice assistant so do not had any special characters that might break the voice assistant
 
 __EXAMPLE_OUTPUT__
 ["Can you explain how you would design an authentication system for a web app using React and Node", "Tell me about a time you worked on a project that required learning a new framework quickly", "How do you ensure code quality and maintainability in a collaborative development environment"]
